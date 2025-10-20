@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.5.20)  20 OCT 2025 10:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.5.20)  20 OCT 2025 16:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -678,20 +678,85 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
  [1{c:/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc}
 
 
-] [2]
-Underfull \hbox (badness 10000) in paragraph at lines 294--296
-\T1/ptm/m/n/10 (+20) where $\OML/ptmcm/m/it/10 s[] \OT1/ptmcm/m/n/10 = [](\OML/ptmcm/m/it/10 Q[]\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 R\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 x\OT1/ptmcm/m/n/10 ))\OML/ptmcm/m/it/10 ; Q[]\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 R\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 x[]\OT1/ptmcm/m/n/10 )))$ \T1/ptm/m/n/10 (+20) and $\OML/ptmcm/m/it/10 s[] \OT1/ptmcm/m/n/10 =
+]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 232.
+
+Underfull \hbox (badness 2443) in paragraph at lines 236--236
+[]\T1/ptm/m/n/9 (+20) ECC over dis-crete ex-
  []
 
-[3]
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 389.
- (./robust_semantic_watermarking_moe.bbl [4
+
+Underfull \hbox (badness 2165) in paragraph at lines 236--236
+[]\T1/ptm/m/n/9 (+20) Graph fea-tures/hash of
+ []
+
+
+Underfull \hbox (badness 1242) in paragraph at lines 237--237
+[]\T1/ptm/m/n/9 (+20) Hierarchical, se-quen-tial
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--238
+[]\T1/ptm/m/n/9 (+20) Statistical reg-u-lar-i-ties
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--238
+\T1/ptm/m/n/9 (+20) in con-tin-u-ous rout-ing
+ []
+
+
+Underfull \hbox (badness 2142) in paragraph at lines 238--239
+[]\T1/ptm/m/n/9 (+20) Lipschitz con-ti-nu-ity of
+ []
+
+
+Underfull \hbox (badness 5274) in paragraph at lines 238--239
+\T1/ptm/m/n/9 (+20) router; learned in-vari-
+ []
+
+
+Underfull \hbox (badness 2717) in paragraph at lines 240--240
+[]\T1/ptm/m/n/9 (+20) Excess ex-pert sub-sti-tu-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 240--241
+[]\T1/ptm/m/n/9 (+20) Overfitting; decision-
+ []
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 307--309
+\T1/ptm/m/n/10 (+20) where $\OML/ptmcm/m/it/10 s[] \OT1/ptmcm/m/n/10 = [](\OML/ptmcm/m/it/10 Q[]\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 R\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 x\OT1/ptmcm/m/n/10 ))\OML/ptmcm/m/it/10 ; Q[]\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 R\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 x[]\OT1/ptmcm/m/n/10 ))) $ \T1/ptm/m/n/10 (+20) and $ \OML/ptmcm/m/it/10 s[] \OT1/ptmcm/m/n/10 =
+ []
+
+
+Underfull \hbox (badness 3557) in paragraph at lines 307--309
+[]\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 Q[]\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 R\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 x\OT1/ptmcm/m/n/10 ))\OML/ptmcm/m/it/10 ; Q[]\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 R\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 x[]\OT1/ptmcm/m/n/10 )))$\T1/ptm/m/n/10 (+20) . For dis-crete out-puts, we
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 307--309
+\T1/ptm/m/n/10 (+20) use straight-through es-ti-ma-tors and op-tion-ally add a
+ []
+
+[3
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.12 
-     ]
+l.313 
+      ] [4]
+Underfull \hbox (badness 10000) in paragraph at lines 430--430
+[]\T1/ptm/m/n/9 (+20) High-overlap ad-ver-sar-ial para-
+ []
+
+(./robust_semantic_watermarking_moe.bbl [5
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1 \begin{thebibliography}{1}
+                              ]
 Underfull \hbox (badness 1960) in paragraph at lines 14--17
 \T1/ptm/m/n/10 (+20) trans-former: Scal-ing to tril-lion pa-ram-e-ter mod-els
  []
@@ -706,25 +771,28 @@ Underfull \hbox (badness 1365) in paragraph at lines 39--42
 \T1/ptm/m/n/10 (+20) Dean.  Out-ra-geously large neu-ral net-works: The
  []
 
-) [5
-
-] (./robust_semantic_watermarking_moe.aux)
+) [6
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.479 \end{document}
+                    ] (./robust_semantic_watermarking_moe.aux)
 Package rerunfilecheck Info: File `robust_semantic_watermarking_moe.out' has not changed.
-(rerunfilecheck)             Checksum: 3560E33C30BF9E447147EF6755EA54B7;4375.
+(rerunfilecheck)             Checksum: 80E9AF1BCF74ED9EA1026B82F1525F5B;5073.
  ) 
 Here is how much of TeX's memory you used:
- 23462 strings out of 476025
- 428068 string characters out of 5794015
- 1872382 words of memory out of 5000000
- 43130 multiletter control sequences out of 15000+600000
- 585160 words of font info for 310 fonts, out of 8000000 for 9000
+ 23516 strings out of 476025
+ 428549 string characters out of 5794015
+ 1873382 words of memory out of 5000000
+ 43134 multiletter control sequences out of 15000+600000
+ 591241 words of font info for 341 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 102i,11n,104p,1327b,567s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,11n,104p,1327b,534s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/symbol/usyr.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/times/utmri8a.pfb><c:/texlive/2023/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on robust_semantic_watermarking_moe.pdf (5 pages, 117406 bytes).
+Output written on robust_semantic_watermarking_moe.pdf (6 pages, 129245 bytes).
 PDF statistics:
- 230 PDF objects out of 1000 (max. 8388607)
- 202 compressed objects within 3 object streams
- 55 named destinations out of 1000 (max. 500000)
- 81621 words of extra memory for PDF output out of 89155 (max. 10000000)
+ 246 PDF objects out of 1000 (max. 8388607)
+ 217 compressed objects within 3 object streams
+ 63 named destinations out of 1000 (max. 500000)
+ 81629 words of extra memory for PDF output out of 89155 (max. 10000000)
 

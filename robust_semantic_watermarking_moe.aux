@@ -17,48 +17,58 @@
 \citation{kirchenbauer2023watermark}
 \citation{jiang2024mixtral}
 \citation{fedus2021switch}
-\citation{shazeer2017outrageously}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\citation{shazeer2017outrageously}
 \citation{kirchenbauer2023watermark}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Background and Motivation}{2}{section.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Mixture-of-Experts Architecture}{2}{subsection.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Limitations of Current Watermarking Approaches}{2}{subsection.2.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3}Methodology}{2}{section.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Combinatorial Expert Signatures (CES)}{2}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Core Mechanism}{2}{subsubsection.3.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Error-Correcting Code Integration}{2}{subsubsection.3.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Trajectory Graph Hashing (TGH)}{2}{subsection.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Expert Trajectory Representation}{2}{subsubsection.3.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Graph-Based Encoding}{2}{subsubsection.3.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Keyed Learnable Quantizer (KLQ)}{2}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Expert-Substitution Channel and Stability}{2}{subsubsection.3.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Keyed Encoding and ECC Integration}{2}{subsubsection.3.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.3}Soft-Decision Decoding via Routing-Weight LLRs}{2}{subsubsection.3.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Guarantee.}{2}{section*.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Comparison of MoE-native methods. CES (local combinatorial), TGH (global structural), KLQ (data-driven).}}{3}{table.1}\protected@file@percent }
+\newlabel{tab:method_compare}{{1}{3}{Comparison of MoE-native methods. CES (local combinatorial), TGH (global structural), KLQ (data-driven)}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Trajectory Graph Hashing (TGH)}{3}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Expert Trajectory Representation}{3}{subsubsection.3.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Graph Construction and Hashing}{3}{subsubsection.3.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Robustness rationale.}{3}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Keyed Learnable Quantizer (KLQ)}{3}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Lipschitz Motivation and Contrastive Framework}{3}{subsubsection.3.3.1}\protected@file@percent }
+\newlabel{eq:contrastive_loss}{{4}{3}{Lipschitz Motivation and Contrastive Framework}{equation.3.4}{}}
 \citation{zhang2019paws}
 \citation{kirchenbauer2023watermark}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Contrastive Learning Framework}{3}{subsubsection.3.3.1}\protected@file@percent }
-\newlabel{eq:contrastive_loss}{{7}{3}{Contrastive Learning Framework}{equation.3.7}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Zero-Cost Training}{3}{subsubsection.3.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Theoretical Analysis}{3}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Robustness Analysis}{3}{subsection.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Capacity Analysis}{3}{subsection.4.2}\protected@file@percent }
-\newlabel{eq:ces_capacity}{{9}{3}{Capacity Analysis}{equation.4.9}{}}
-\newlabel{eq:tgh_capacity}{{10}{3}{Capacity Analysis}{equation.4.10}{}}
-\newlabel{eq:klq_capacity}{{11}{3}{Capacity Analysis}{equation.4.11}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Security Analysis}{3}{subsection.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Experimental Design}{3}{section.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experimental Setup}{3}{subsection.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Evaluation Metrics}{3}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Zero-Cost Training}{4}{subsubsection.3.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Security note.}{4}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Theoretical Analysis}{4}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Robustness Analysis}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Capacity Analysis}{4}{subsection.4.2}\protected@file@percent }
+\newlabel{eq:ces_capacity}{{6}{4}{Capacity Analysis}{equation.4.6}{}}
+\newlabel{eq:tgh_capacity}{{7}{4}{Capacity Analysis}{equation.4.7}{}}
+\newlabel{eq:klq_capacity}{{8}{4}{Capacity Analysis}{equation.4.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Security Analysis and Attack Model}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Router-PGD attack (white-box).}{4}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Defense factors.}{4}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Trade-offs.}{4}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experimental Design}{4}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experimental Setup}{4}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Evaluation Metrics}{4}{subsection.5.2}\protected@file@percent }
 \citation{christ2023watermarking,li2023survey}
 \citation{kirchenbauer2023watermark}
 \citation{chen2020simple}
 \citation{macwilliams1977theory}
 \bibstyle{plain}
 \bibdata{robust_semantic_watermarking_moe}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Ablation Studies}{5}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Expected Results}{5}{subsection.5.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Expected performance comparison. MoE-native methods show superior robustness while maintaining competitive efficiency.}}{5}{table.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Threat suite and protocol.}{5}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Related Work}{5}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion and Future Work}{5}{section.7}\protected@file@percent }
 \bibcite{chen2020simple}{1}
 \bibcite{christ2023watermarking}{2}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Ablation Studies}{4}{subsection.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Expected Results}{4}{subsection.5.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Expected performance comparison. MoE-native methods show superior robustness while maintaining competitive efficiency.}}{4}{table.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Related Work}{4}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion and Future Work}{4}{section.7}\protected@file@percent }
 \bibcite{fedus2021switch}{3}
 \bibcite{jiang2024mixtral}{4}
 \bibcite{kirchenbauer2023watermark}{5}
@@ -66,4 +76,6 @@
 \bibcite{macwilliams1977theory}{7}
 \bibcite{shazeer2017outrageously}{8}
 \bibcite{zhang2019paws}{9}
-\gdef \@abspage@last{5}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Comprehensive threat model and evaluation protocol.}}{6}{table.3}\protected@file@percent }
+\newlabel{tab:threats}{{3}{6}{Comprehensive threat model and evaluation protocol}{table.3}{}}
+\gdef \@abspage@last{6}

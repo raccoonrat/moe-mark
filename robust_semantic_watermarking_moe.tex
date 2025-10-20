@@ -182,11 +182,11 @@ The rapid advancement of Large Language Models (LLMs) has brought unprecedented 
 
 However, the landscape of LLM architectures is rapidly evolving. Mixture-of-Experts (MoE) models, such as Mixtral~\cite{jiang2024mixtral}, represent a paradigm shift toward sparse, conditional computation that fundamentally differs from traditional dense architectures~\cite{fedus2021switch}. These models activate only a subset of experts for each input, creating rich internal routing patterns that remain unexploited by current watermarking approaches.
 
-\textbf{The Core Problem:} Existing watermarking methods treat MoE models as black boxes, applying generic techniques that ignore their distinctive sparse computation structure. This represents a significant missed opportunity, as the discrete routing decisions in MoE models contain semantic information that is inherently more robust to paraphrase attacks than the continuous embeddings used by current methods.
+\textbf{The Core Problem:} Existing watermarking methods treat MoE models as black boxes, applying generic techniques that ignore their distinctive sparse computation structure. This represents a significant missed opportunity, as the discrete routing decisions in MoE models contain semantic information that is inherently more robust to paraphrase attacks than the continuous embeddings used by current methods. A seemingly natural baseline---applying locality-sensitive hashing (LSH) directly to continuous routing weights---fails to exploit the combinatorial nature of expert selection and therefore inherits the fragility of continuous embeddings. In contrast, our thesis is that robustness should derive from architecture-native \emph{discrete} signals: which experts are chosen, and how they are composed across layers.
 
-\textbf{Our Contribution:} We introduce the first framework for \textit{MoE-native watermarking} that leverages the unique characteristics of expert routing. Our approach represents a fundamental shift from treating MoE internal states as generic continuous vectors to directly utilizing their discrete, combinatorial structure for watermarking.
+\textbf{Our Contribution and Positioning:} We introduce the first framework for \textit{MoE-native watermarking} that leverages the unique characteristics of expert routing. Our approach represents a fundamental shift from treating MoE internal states as generic continuous vectors to directly utilizing their discrete, combinatorial structure for watermarking. Beyond copyright provenance, our framework serves as a \emph{semantic fingerprinting probe} for MoE models: if watermarks remain detectable under strong paraphrase transformations, this provides empirical evidence that expert routing encodes stable semantic regularities. This dual positioning widens the impact to interpretability and robustness assessment of sparse LLMs.
 
-Specifically, we present three complementary methods:
+Specifically, we present three complementary methods that form a unified architecture-aware toolkit:
 
 \begin{itemize}
 \item \textbf{Combinatorial Expert Signatures (CES):} Encodes the top-$k$ expert selection at each layer using error-correcting codes, providing deterministic robustness guarantees against expert substitution attacks.
@@ -194,7 +194,7 @@ Specifically, we present three complementary methods:
 \item \textbf{Keyed Learnable Quantizer (KLQ):} Employs contrastive learning to automatically discover semantic-invariant mappings from routing weights to discrete signatures.
 \end{itemize}
 
-Our theoretical analysis establishes provable bounds on robustness, capacity, and security. Experimental evaluation demonstrates significant improvements over existing watermarking methods, particularly against sophisticated paraphrase attacks that exploit semantic equivalence.
+Our theoretical analysis establishes provable bounds on robustness, capacity, and security. We articulate an explicit robustness--capacity--imperceptibility trade-off and analyze gray-box security in the presence of architecture-aware adversaries. Experimental evaluation demonstrates significant improvements over existing watermarking methods, particularly against sophisticated paraphrase attacks that exploit semantic equivalence, and introduces a novel \emph{router-PGD} attack to directly challenge MoE routing decisions.
 
 \textbf{Why Now?} The timing is critical for two converging trends: (1) MoE architectures are becoming mainstream in production LLM systems, and (2) paraphrase attacks are becoming increasingly sophisticated, rendering traditional watermarking methods vulnerable. Our work provides a timely solution that addresses both challenges simultaneously.
 
@@ -224,31 +224,47 @@ Recent attempts to use MoE routing weights for watermarking have fundamental the
 \section{Methodology}
 %-------------------------------------------------------------------------------
 
-We propose three complementary approaches that exploit different aspects of MoE computation for robust semantic watermarking.
+We propose three complementary approaches that exploit different aspects of MoE computation for robust semantic watermarking. To orient readers, Table~\ref{tab:method_compare} provides a high-level comparison highlighting principles, MoE properties utilized, robustness sources, and typical vulnerabilities.
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{|l|p{3.2cm}|p{3.2cm}|p{3.2cm}|}
+\hline
+\textbf{Aspect} & \textbf{CES} & \textbf{TGH} & \textbf{KLQ} \\
+\hline
+Principle & ECC over discrete expert sets (combinatorial encoding) & Graph features/hash of cross-layer expert trajectories & Contrastive-learned quantizer over routing weights \\
+MoE property & Top-$k$ selection discreteness and set structure & Hierarchical, sequential routing across layers & Statistical regularities in continuous routing weights \\
+Robustness source & Coding-theoretic correction radius; soft-decision decoding & Stability of graph spectra/WL labels under local edits & Lipschitz continuity of router; learned invariances \\
+Key dependencies & Secret key; ECC design (e.g., LDPC) & Secret key; trajectory feature/hash choice & Secret key; high-quality paraphrase pairs \\
+Main vulnerabilities & Excess expert substitutions beyond ECC capability & Attacks changing global trajectory structure & Overfitting; decision-boundary crossing in RW space \\
+\hline
+\end{tabular}
+\caption{Comparison of MoE-native methods. CES (local combinatorial), TGH (global structural), KLQ (data-driven).}
+\label{tab:method_compare}
+\end{table*}
 
 \subsection{Combinatorial Expert Signatures (CES)}
 
 CES encodes the discrete expert selection at each MoE layer as a binary signature, then applies error-correcting codes for algebraic robustness guarantees.
 
-\subsubsection{Core Mechanism}
+\subsubsection{Expert-Substitution Channel and Stability}
 
-For a given input context $x$, we extract the top-$k$ expert set $\text{TopK}(x)$ and encode it as a preliminary signature $s' \in \{0,1\}^{L_{\text{msg}}}$ using a keyed combinatorial encoding function:
+We model paraphrasing as a discrete expert-substitution channel. Let $S_x = \text{TopK}(x)$ and $S_{x'} = \text{TopK}(x')$ for a paraphrase pair $(x,x')$. Define $t = |S_x \Delta S_{x'}|/2$ and quantify stability via Jaccard similarity $J(S_x,S_{x'}) = \frac{|S_x \cap S_{x'}|}{|S_x \cup S_{x'}|}$. Empirical $J$ distributions (e.g., on PAWS) provide data-driven bounds on typical $t$.
 
+\subsubsection{Keyed Encoding and ECC Integration}
+
+Given $S_x$, we compute a keyed combinatorial message $s' = \text{Enc}_{\text{comb}}(S_x; k) \in \{0,1\}^{L_{\text{msg}}}$ and produce a coded signature with generator matrix $G$:
 \begin{equation}
-s' = \text{Enc}_{\text{comb}}(\text{TopK}(x))
+s = s' \cdot G \in \{0,1\}^{L_{\text{code}}}.
 \end{equation}
+At detection, an ECC decoder $\text{Dec}_{\text{ECC}}$ corrects up to $t$ substitutions implied by minimum distance $d_{\min}$.
 
-We then apply an error-correcting code with generator matrix $G$ to produce the final signature:
+\subsubsection{Soft-Decision Decoding via Routing-Weight LLRs}
 
-\begin{equation}
-s = s' \cdot G \in \{0,1\}^{L_{\text{code}}}
-\end{equation}
+From routing weights $R(x)$ we derive per-bit log-likelihood ratios (LLRs) that reflect selection confidence and feed them into an LDPC soft-decision decoder. This preserves the architectural discreteness (via Top-$k$) while exploiting continuous router evidence to improve practical correction beyond hard-decision bounds.
 
-\subsubsection{Error-Correcting Code Integration}
-
-The key innovation is modeling paraphrase attacks as communication channel noise. If an attack changes at most $t$ experts in $\text{TopK}(x)$, the resulting signature $s_{\text{perturbed}}$ will be within the correction radius of the ECC. The detection process can then recover the original signature using standard ECC decoding algorithms.
-
-\textbf{Theoretical Guarantee:} For any attack that changes at most $t$ experts, where $t$ is determined by the ECC's minimum distance, the watermark can be perfectly recovered with 100\% success rate.
+\paragraph{Guarantee.} Hard-decision correction holds for $t \le \lfloor(d_{\min}-1)/2\rfloor$. Soft decisions increase empirical tolerance under paraphrase-shaped noise without additional redundancy.
 
 \subsection{Trajectory Graph Hashing (TGH)}
 
@@ -264,27 +280,24 @@ T(x) = (\text{TopK}_1(x), \text{TopK}_2(x), \ldots, \text{TopK}_{L_{\text{moe}}}
 
 This trajectory represents the model's hierarchical reasoning process, with lower layers handling syntactic patterns and higher layers processing abstract concepts.
 
-\subsubsection{Graph-Based Encoding}
+\subsubsection{Graph Construction and Hashing}
 
-We represent the trajectory as a graph where nodes are experts and edges represent layer transitions. A graph embedding function $\Phi$ extracts structural features:
+We build a directed acyclic graph $G_x=(V,E)$ where each node $v_{\ell,e}$ denotes expert $e$ at layer $\ell$, and we add an edge $(v_{\ell,e_i} \to v_{\ell+1,e_j})$ if both experts are selected for the same token at adjacent layers. Edge weights can reflect routing confidence (e.g., product of normalized routing scores). We then derive a fixed-length signature via either:
+\begin{itemize}
+\item Spectral features: eigenvalues of the graph Laplacian aggregated into a robust spectral histogram.
+\item Weisfeiler--Leman (WL) hashing: iterative neighborhood label refinement followed by keyed hashing of multiset labels.
+\end{itemize}
+Finally, a keyed hash $H_k$ maps features to a binary signature $s = H_k(\text{feat}(G_x)) \in \{0,1\}^L$.
 
-\begin{equation}
-v = \Phi(T(x)) \in \mathbb{R}^D
-\end{equation}
-
-The feature vector $v$ is then hashed to produce the final signature:
-
-\begin{equation}
-s = H(v) \in \{0,1\}^L
-\end{equation}
+\paragraph{Robustness rationale.} Semantic-preserving paraphrases induce primarily local edits in $G_x$ (few node/edge changes). Spectral summaries and WL labels are stable under such local perturbations, yielding low Hamming drift in the final signature.
 
 \subsection{Keyed Learnable Quantizer (KLQ)}
 
 KLQ employs contrastive learning to automatically discover semantic-invariant mappings from routing weights to discrete signatures.
 
-\subsubsection{Contrastive Learning Framework}
+\subsubsection{Lipschitz Motivation and Contrastive Framework}
 
-We train a small auxiliary neural network $Q_k$ (parameterized by secret key $k$) to map routing weights to discrete codebook entries. The training uses paraphrase pairs $(x, x')$ as positive examples and semantically different pairs $(x, y)$ as negative examples.
+The router $f: x \mapsto R(x)$ is typically a linear projection followed by softmax, which is Lipschitz continuous; thus small semantic-preserving perturbations in embeddings induce bounded changes in $R(x)$. We leverage this by training a small keyed network $Q_k$ to map $R(x)$ into a discrete codebook robust to such bounded variations. Training uses paraphrase pairs $(x,x')$ as positives and unrelated pairs as negatives.
 
 The contrastive loss encourages $Q_k$ to produce similar outputs for paraphrases:
 
@@ -292,11 +305,13 @@ The contrastive loss encourages $Q_k$ to produce similar outputs for paraphrases
 \mathcal{L} &= -\log \frac{\exp(s_{+}/\tau)}{\exp(s_{+}/\tau) + \sum_j \exp(s_{-j}/\tau)} \nonumber \\
 &= -\log \frac{\exp(s_{+}/\tau)}{Z(x)} \label{eq:contrastive_loss}
 \end{align}
-where $s_{+} = \text{sim}(Q_k(R(x)), Q_k(R(x')))$ and $s_{-j} = \text{sim}(Q_k(R(x)), Q_k(R(x_j^-)))$.
+where $s_{+} = \text{sim}(Q_k(R(x)), Q_k(R(x')))\,$ and $\,s_{-j} = \text{sim}(Q_k(R(x)), Q_k(R(x_j^-)))$. For discrete outputs, we use straight-through estimators and optionally add a Hamming-margin term that directly pulls positive codewords together and pushes negatives apart.
 
 \subsubsection{Zero-Cost Training}
 
 Crucially, only the auxiliary quantizer $Q_k$ is trained; the main LLM remains frozen, maintaining the "zero training cost" principle of watermarking.
+
+\paragraph{Security note.} Secret key $k$ seeds $Q_k$'s initialization and codebook structure, rendering decision boundaries pseudo-random to gray-box adversaries who know the algorithm but not the key.
 
 %-------------------------------------------------------------------------------
 \section{Theoretical Analysis}
@@ -331,15 +346,15 @@ C_{\text{TGH}} &= L \text{ bits/token} \label{eq:tgh_capacity} \\
 C_{\text{KLQ}} &= \log_2(C) \text{ bits/token} \label{eq:klq_capacity}
 \end{align}
 
-\subsection{Security Analysis}
+\subsection{Security Analysis and Attack Model}
 
-All methods rely on secret keys for security:
-\begin{itemize}
-\item CES/TGH: Security depends on keyed encoding functions and the combinatorial/graph space size
-\item KLQ: Security relies on the unpredictability of the keyed neural network initialization
-\end{itemize}
+We adopt a gray-box threat model: the algorithm is known, secret keys remain hidden. We also introduce an \emph{architecture-aware} adversary who can backpropagate through the MoE to seek routing manipulations.
 
-Under a gray-box attack model where the algorithm is known but keys are secret, finding adversarial perturbations that preserve text quality while breaking watermarks is computationally intractable.
+\paragraph{Router-PGD attack (white-box).} The attacker optimizes a small embedding perturbation $\delta$ under a norm constraint to (i) preserve text semantics (measured via embedding similarity/BERTScore) while (ii) maximizing signature change: for CES, increase expert substitutions beyond ECC correction; for KLQ, cross $Q_k$ decision boundaries; for TGH, alter global trajectory structure. This directly targets routing rather than output tokens.
+
+\paragraph{Defense factors.} (1) Discreteness: Top-$k$/argmax creates gradient bottlenecks, impeding precise control of discrete signatures; (2) Keyed randomness: keyed encoders and $Q_k$ obscure decision boundaries; (3) Redundancy: ECC absorbs bounded substitutions.
+
+\paragraph{Trade-offs.} Let robustness $\mathcal{R}$ denote tolerated perturbation (e.g., max $t$), capacity $\mathcal{C}$ the payload bits/token, and imperceptibility $\mathcal{I}$ the generation-quality proximity (e.g., $\Delta$PPL or KL divergence). Increasing $\mathcal{R}$ via stronger ECC reduces $\mathcal{C}$ at fixed signature length; tighter $\mathcal{I}$ constraints may limit $\mathcal{R}$ under strong attackers. Our analysis makes these dependencies explicit for parameter selection.
 
 %-------------------------------------------------------------------------------
 \section{Experimental Design}
@@ -403,6 +418,25 @@ RW-LSH & 0.58 & 0.9 & 2.3 & 8.0 \\
 
 The theoretical guarantees of CES should provide particularly strong performance on adversarial datasets like PAWS, while TGH's hierarchical approach should excel on complex semantic transformations.
 
+\paragraph{Threat suite and protocol.} We evaluate under a comprehensive suite: (i) semantic paraphrase attacks (PAWS, QQP); (ii) model transformation attacks (fine-tuning on clean data; pruning/quantization); (iii) router-PGD white-box attacks that directly optimize embedding perturbations to alter routing while preserving semantics. We report ROC-AUC, TPR@FPR, attack success vs. perturbation radius, and post-attack detectability.
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{|l|l|p{4.5cm}|l|l|}
+\hline
+\textbf{Threat} & \textbf{Method} & \textbf{Description} & \textbf{Data/Setup} & \textbf{Primary Metric} \\
+\hline
+Semantic & Paraphrase & High-overlap adversarial paraphrases & PAWS, QQP & AUC, TPR@1\%FPR \\
+Model & Fine-tune & Fine-tune watermarked model on clean corpus & C4 subset & Post-tune TPR \\
+Model & Prune/Quantize & Magnitude pruning; 8-bit quantization & Standard toolchain & Post-compress TPR \\
+White-box & Router-PGD & Optimize embedding to alter routing decisions & C4 prompts & Success vs. $\epsilon$ \\
+\hline
+\end{tabular}
+\caption{Comprehensive threat model and evaluation protocol.}
+\label{tab:threats}
+\end{table*}
+
 %-------------------------------------------------------------------------------
 \section{Related Work}
 %-------------------------------------------------------------------------------
@@ -419,9 +453,9 @@ The contrastive learning component of KLQ builds upon recent advances in self-su
 
 We have introduced the first framework for MoE-native watermarking, representing a fundamental paradigm shift from treating MoE models as generic dense networks to exploiting their unique sparse computation patterns. Our three complementary methods—CES, TGH, and KLQ—demonstrate the power of architecture-aware design in achieving superior robustness against paraphrase attacks.
 
-\textbf{Key Contributions:} (1) We established that discrete expert selection provides more stable semantic signatures than continuous routing weights, (2) We provided deterministic robustness guarantees through error-correcting codes, and (3) We demonstrated how contrastive learning can automatically discover semantic-invariant mappings for watermarking.
+\textbf{Key Contributions:} (1) We established that discrete expert selection provides more stable semantic signatures than continuous routing weights, (2) We provided deterministic robustness guarantees through error-correcting codes with soft-decision decoding using router-derived LLRs, and (3) We demonstrated how contrastive learning, grounded in Lipschitz properties of routing, can automatically discover semantic-invariant mappings for watermarking. We also proposed an architecture-aware router-PGD attack and analyzed gray-box security.
 
-\textbf{Broader Impact:} Our work opens new research directions for architecture-aware security in sparse neural networks. The principles developed here can be extended to other sparse architectures like Switch Transformers, sparse attention mechanisms, and conditional computation models. This represents a significant step toward understanding how architectural choices in modern LLMs can be leveraged for robust security applications.
+\textbf{Broader Impact:} Beyond provenance, our framework functions as a semantic fingerprinting probe for sparse models, enabling analyses of routing stability, layer-wise abstraction, and model comparisons via trajectory graphs. The principles developed here extend to Switch Transformers, sparse attention, and conditional computation. This reframes watermarking as both a security mechanism and a mechanistic interpretability tool.
 
 \textbf{Future Work:} We plan to investigate adaptive watermarking strategies that can adjust robustness parameters based on detected attack patterns, explore federated watermarking for distributed MoE systems, and develop theoretical frameworks for quantifying the fundamental trade-offs between robustness, capacity, and imperceptibility in architecture-aware watermarking systems.
 
