@@ -1,0 +1,23 @@
+\begin{thebibliography}{1}
+
+\bibitem{jiang2024mixtral}
+Albert~Q Jiang, Alexandre Sablayrolles, Antoine Roux, Arthur Mensch, Blanche
+  Savary, Chris Bamford, Devendra~Singh Chaplot, Diego de~las Casas, Emma
+  Bressand, Gianna Lengyel, et~al.
+\newblock Mixtral of experts.
+\newblock In {\em arXiv preprint arXiv:2401.04088}, 2024.
+
+\bibitem{kirchenbauer2023watermark}
+John Kirchenbauer, Jonas Geiping, Yuxin Wen, Jonathan Katz, Ian Miers, and Tom
+  Goldstein.
+\newblock A watermark for large language models.
+\newblock {\em arXiv preprint arXiv:2301.10226}, 2023.
+
+\bibitem{zhang2019paws}
+Yuan Zhang, Jason Baldridge, and Luheng He.
+\newblock Paws: Paraphrase adversaries from word scrambling.
+\newblock In {\em Proceedings of the 2019 Conference of the North American
+  Chapter of the Association for Computational Linguistics}, pages 1298--1308,
+  2019.
+
+\end{thebibliography}

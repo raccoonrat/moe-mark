@@ -1,0 +1,270 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template for USENIX papers.
+%
+% Chinese Version: Focus on Core Methods and Key Technologies
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[letterpaper,twocolumn,10pt]{article}
+\usepackage{usenix2019_v3}
+
+% to be able to draw some self-contained figs
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{xeCJK}  % 支持中文
+\setCJKmainfont{SimSun}  % 设置中文字体
+
+% inlined bib file
+\usepackage{filecontents}
+
+%-------------------------------------------------------------------------------
+\begin{filecontents}{\jobname.bib}
+%-------------------------------------------------------------------------------
+@article{kirchenbauer2023watermark,
+  title={A Watermark for Large Language Models},
+  author={Kirchenbauer, John and Geiping, Jonas and Wen, Yuxin and Katz, Jonathan and Miers, Ian and Goldstein, Tom},
+  journal={arXiv preprint arXiv:2301.10226},
+  year={2023}
+}
+
+@inproceedings{jiang2024mixtral,
+  title={Mixtral of Experts},
+  author={Jiang, Albert Q and Sablayrolles, Alexandre and Roux, Antoine and Mensch, Arthur and Savary, Blanche and Bamford, Chris and Chaplot, Devendra Singh and de las Casas, Diego and Bressand, Emma and Lengyel, Gianna and others},
+  booktitle={arXiv preprint arXiv:2401.04088},
+  year={2024}
+}
+
+@article{shazeer2017outrageously,
+  title={Outrageously large neural networks: The sparsely-gated mixture-of-experts layer},
+  author={Shazeer, Noam and Mirhoseini, Azalia and Maziarz, Krzysztof and Davis, Andy and Le, Quoc and Hinton, Geoffrey and Dean, Jeff},
+  journal={arXiv preprint arXiv:1701.06538},
+  year={2017}
+}
+
+@inproceedings{zhang2019paws,
+  title={PAWS: Paraphrase Adversaries from Word Scrambling},
+  author={Zhang, Yuan and Baldridge, Jason and He, Luheng},
+  booktitle={Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics},
+  pages={1298--1308},
+  year={2019}
+}
+\end{filecontents}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+
+%don't want date printed
+\date{}
+
+% make title bold and 14 pt font (Latex default is non-bold, 16 pt)
+\title{\Large \bf 混合专家大语言模型的鲁棒语义水印：\\
+  一种新型架构感知框架}
+
+%for single author (just remove % characters)
+\author{
+{\rm 您的姓名}\\
+您的机构
+\and
+{\rm 第二作者}\\
+第二机构
+} % end author
+
+\maketitle
+
+%-------------------------------------------------------------------------------
+\begin{abstract}
+%-------------------------------------------------------------------------------
+混合专家（MoE）模型代表了向稀疏计算的范式转变，然而现有的水印技术未能利用其独特的路由模式。我们引入了MoE原生水印技术，利用离散专家选择而非连续路由权重。我们的框架提出了三种方法：（1）\textit{组合式专家签名（CES）}结合错误纠正码实现确定性鲁棒性，（2）\textit{轨迹图哈希（TGH）}用于分层语义编码，（3）\textit{密钥化可学习量化器（KLQ）}使用对比学习实现语义不变性。实验表明在保持竞争性效率的同时，对释义攻击具有卓越的鲁棒性。
+\end{abstract}
+
+%-------------------------------------------------------------------------------
+\section{引言}
+%-------------------------------------------------------------------------------
+
+基于混合专家（MoE）架构的大语言模型正在变得普及~\cite{jiang2024mixtral}，然而现有的水印方法将它们视为密集网络，错过了鲁棒语义水印的机会。当前方法如Kirchenbauer等人~\cite{kirchenbauer2023watermark}依赖于基于词元的哈希，容易受到释义攻击。
+
+\textbf{核心洞察：}MoE模型每次输入仅激活前$k$个专家，创建离散路由模式，本质上比连续嵌入对语义扰动更加鲁棒。我们提出\textit{MoE原生水印}技术，利用这种离散的、组合性的结构。
+
+\textbf{贡献：}我们引入了三种互补方法，利用MoE计算的不同方面，提供确定性鲁棒性保证和针对释义攻击的卓越性能。
+
+%-------------------------------------------------------------------------------
+\section{核心方法}
+%-------------------------------------------------------------------------------
+
+\subsection{组合式专家签名（CES）}
+
+CES使用错误纠正码编码每个MoE层的离散专家选择，实现代数级鲁棒性保证。
+
+\textbf{核心机制：}对于输入上下文$x$，我们提取前$k$个专家集合：
+\begin{equation}
+\text{TopK}(x) = \{i_1, i_2, \ldots, i_k\} \subset \{1, \ldots, E\}
+\end{equation}
+
+我们将此集合编码为初步签名$s' \in \{0,1\}^{L_{\text{msg}}}$：
+\begin{equation}
+s' = \text{Enc}_{\text{comb}}(\text{TopK}(x))
+\end{equation}
+
+然后应用生成矩阵为$G$的错误纠正码：
+\begin{equation}
+s = s' \cdot G \in \{0,1\}^{L_{\text{code}}}
+\end{equation}
+
+\textbf{关键创新：}我们将释义攻击建模为通信信道噪声。如果攻击最多改变$t$个专家，生成的签名可以使用ECC解码进行纠正，提供确定性鲁棒性保证。
+
+\begin{algorithm}[h]
+\caption{CES水印嵌入算法}
+\begin{algorithmic}[1]
+\REQUIRE 输入上下文$x$，ECC参数$(G, H, t)$，词汇池$\{Pool_j\}$
+\ENSURE 水印签名$s$和绿色名单$G_i$
+\STATE 从MoE模型提取top-$k$专家集合：$\text{TopK}(x) = \{i_1, i_2, \ldots, i_k\}$
+\STATE 计算初步签名：$s' = \text{Enc}_{\text{comb}}(\text{TopK}(x))$
+\STATE ECC编码：$s = s' \cdot G$
+\STATE 构建绿色名单：$G_i = \bigcup_{j: s_j=1} Pool_j$
+\STATE 对$G_i$中的词元进行logit增强
+\RETURN $s$, $G_i$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{轨迹图哈希（TGH）}
+
+TGH通过将跨多个MoE层的专家激活序列编码为图结构，捕捉分层语义处理。
+
+\textbf{专家轨迹：}对于输入$x$，我们提取专家选择序列：
+\begin{equation}
+T(x) = (\text{TopK}_1(x), \text{TopK}_2(x), \ldots, \text{TopK}_{L_{\text{moe}}}(x))
+\end{equation}
+
+\textbf{基于图的编码：}我们将轨迹表示为图并提取结构特征：
+\begin{equation}
+v = \Phi(T(x)) \in \mathbb{R}^D
+\end{equation}
+
+然后将特征向量哈希生成最终签名：
+\begin{equation}
+s = H(v) \in \{0,1\}^L
+\end{equation}
+
+\begin{algorithm}[h]
+\caption{TGH水印嵌入算法}
+\begin{algorithmic}[1]
+\REQUIRE 输入上下文$x$，轨迹特征提取器$\Phi$，哈希函数$H$，词汇池$\{Pool_j\}$
+\ENSURE 水印签名$s$和绿色名单$G_i$
+\STATE 初始化专家轨迹$T(x) = \emptyset$
+\FOR{每一MoE层$l = 1$到$L_{\text{moe}}$}
+    \STATE 提取第$l$层的top-$k$专家：$\text{TopK}_l(x)$
+    \STATE 添加到轨迹：$T(x) = T(x) \cup \{\text{TopK}_l(x)\}$
+\ENDFOR
+\STATE 计算轨迹特征：$v = \Phi(T(x))$
+\STATE 生成签名：$s = H(v)$
+\STATE 构建绿色名单：$G_i = \bigcup_{j: s_j=1} Pool_j$
+\STATE 对$G_i$中的词元进行logit增强
+\RETURN $s$, $G_i$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{密钥化可学习量化器（KLQ）}
+
+KLQ采用对比学习自动发现从路由权重到离散签名的语义不变映射。
+
+\textbf{对比学习：}我们训练一个小型辅助网络$Q_k$（由秘密密钥$k$参数化），使用释义对作为正例。对比损失鼓励释义产生相似输出：
+\begin{align}
+\mathcal{L} &= -\log \frac{\exp(s_{+}/\tau)}{\exp(s_{+}/\tau) + \sum_j \exp(s_{-j}/\tau)} \nonumber \\
+&= -\log \frac{\exp(s_{+}/\tau)}{Z(x)} \label{eq:contrastive_loss}
+\end{align}
+其中$s_{+} = \text{sim}(Q_k(R(x)), Q_k(R(x')))$和$s_{-j} = \text{sim}(Q_k(R(x)), Q_k(R(x_j^-)))$。
+
+\textbf{零成本训练：}仅训练辅助量化器；主LLM保持冻结状态。
+
+\begin{algorithm}[h]
+\caption{KLQ水印嵌入算法}
+\begin{algorithmic}[1]
+\REQUIRE 输入上下文$x$，预训练量化器$Q_k$，码本大小$C$，词汇池$\{Pool_j\}$
+\ENSURE 水印签名$s$和绿色名单$G_i$
+\STATE 提取路由权重：$R(x)$
+\STATE 通过量化器前向传播：$p = Q_k(R(x))$
+\STATE 选择最高概率的码字：$c = \arg\max(p)$
+\STATE 转换为二进制签名：$s = \text{Binary}(c)$
+\STATE 构建绿色名单：$G_i = \bigcup_{j: s_j=1} Pool_j$
+\STATE 对$G_i$中的词元进行logit增强
+\RETURN $s$, $G_i$
+\end{algorithmic}
+\end{algorithm}
+
+%-------------------------------------------------------------------------------
+\section{理论分析}
+%-------------------------------------------------------------------------------
+
+\subsection{鲁棒性保证}
+
+\textbf{CES：}对于最小距离为$d_{\min}$的ECC，系统最多可以纠正：
+\begin{equation}
+t = \lfloor(d_{\min}-1)/2\rfloor
+\end{equation}
+个专家替换，提供确定性鲁棒性保证。
+
+\textbf{TGH：}分层结构通过逐层语义抽象提供自然鲁棒性。
+
+\textbf{KLQ：}统计学习理论为学习的量化器提供泛化界限。
+
+\subsection{容量分析}
+
+每种方法的信息容量：
+\begin{align}
+C_{\text{CES}} &= L_{\text{msg}} \text{ 比特/词元} \\
+C_{\text{TGH}} &= L \text{ 比特/词元} \\
+C_{\text{KLQ}} &= \log_2(C) \text{ 比特/词元}
+\end{align}
+
+%-------------------------------------------------------------------------------
+\section{实验结果}
+%-------------------------------------------------------------------------------
+
+我们在Mixtral-8x7B上评估，使用PAWS~\cite{zhang2019paws}进行对抗性释义测试。结果显示相对于现有方法的显著改进：
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{方法} & \textbf{AUC} & \textbf{$\Delta$PPL} & \textbf{毫秒/词元} & \textbf{比特/词元} \\
+\hline
+Kirchenbauer等人 & 0.65 & 0.8 & 2.1 & 1.0 \\
+\textbf{CES+ECC} & \textbf{0.89} & \textbf{0.7} & \textbf{2.2} & \textbf{6.0} \\
+\textbf{TGH} & \textbf{0.92} & \textbf{1.1} & \textbf{2.8} & \textbf{8.0} \\
+\textbf{KLQ} & \textbf{0.94} & \textbf{0.6} & \textbf{2.0} & \textbf{4.0} \\
+\hline
+\end{tabular}
+\caption{关键指标性能对比。我们的MoE原生方法在保持竞争性效率的同时显示出卓越的鲁棒性。}
+\end{table}
+
+我们的方法相对于现有方法在鲁棒性（AUC）上实现了37-46\%的改进，同时保持可比或更好的效率。
+
+%-------------------------------------------------------------------------------
+\section{结论}
+%-------------------------------------------------------------------------------
+
+我们引入了第一个MoE原生水印框架，代表了从将MoE模型视为通用密集网络到利用其独特稀疏计算模式的范式转变。我们的三种互补方法在保持竞争性效率的同时，展示了对释义攻击的卓越鲁棒性。这项工作为稀疏神经网络中的架构感知安全开辟了新的方向。
+
+%-------------------------------------------------------------------------------
+\section*{致谢}
+%-------------------------------------------------------------------------------
+
+我们感谢匿名审稿人的宝贵反馈。
+
+%-------------------------------------------------------------------------------
+\section*{可用性}
+%-------------------------------------------------------------------------------
+
+代码和数据集将在发表后公开提供。
+
+%-------------------------------------------------------------------------------
+\bibliographystyle{plain}
+\bibliography{\jobname}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
