@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2025.5.20)  20 OCT 2025 11:08
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2025.5.20)  20 OCT 2025 11:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -989,6 +989,18 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 119.
 
+Underfull \hbox (badness 6063) in paragraph at lines 123--124
+[] []\TU/lmr/m/n/10 Extract top-$\OML/ptmcm/m/it/10 k$ \TU/lmr/m/n/10 expert se
+t from MoE model:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 124--125
+[] []\TU/lmr/m/n/10 Compute preliminary signature: $\OML/ptmcm/m/it/10 s[] \OT1
+/ptmcm/m/n/10 =
+ []
+
+
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [1
@@ -1002,6 +1014,9 @@ tmcm/m/it/10 x\OT1/ptmcm/m/n/10 ))\OML/ptmcm/m/it/10 ; Q[]\OT1/ptmcm/m/n/10 (\O
 ML/ptmcm/m/it/10 R\OT1/ptmcm/m/n/10 (\OML/ptmcm/m/it/10 x[]\OT1/ptmcm/m/n/10 ))
 )$ \TU/SimSun(0)/b/n/10 和 $\OML/ptmcm/m/it/10 s[] \OT1/ptmcm/m/n/10 =
  []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 LaTeX Warning: Citation `zhang2019paws' on page 2 undefined on input line 226.
@@ -1044,6 +1059,6 @@ Here is how much of TeX's memory you used:
  46618 multiletter control sequences out of 15000+600000
  536599 words of font info for 114 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 100i,11n,104p,1037b,501s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 100i,11n,104p,1037b,500s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on robust_semantic_watermarking_moe_chinese.pdf (3 pages).

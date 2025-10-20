@@ -116,15 +116,15 @@ s = s' \cdot G \in \{0,1\}^{L_{\text{code}}}
 \textbf{关键创新：}我们将释义攻击建模为通信信道噪声。如果攻击最多改变$t$个专家，生成的签名可以使用ECC解码进行纠正，提供确定性鲁棒性保证。
 
 \begin{algorithm}[h]
-\caption{CES水印嵌入算法}
+\caption{CES Watermark Embedding Algorithm}
 \begin{algorithmic}[1]
-\REQUIRE 输入上下文$x$，ECC参数$(G, H, t)$，词汇池$\{Pool_j\}$
-\ENSURE 水印签名$s$和绿色名单$G_i$
-\STATE 从MoE模型提取top-$k$专家集合：$\text{TopK}(x) = \{i_1, i_2, \ldots, i_k\}$
-\STATE 计算初步签名：$s' = \text{Enc}_{\text{comb}}(\text{TopK}(x))$
-\STATE ECC编码：$s = s' \cdot G$
-\STATE 构建绿色名单：$G_i = \bigcup_{j: s_j=1} Pool_j$
-\STATE 对$G_i$中的词元进行logit增强
+\REQUIRE Input context $x$, ECC parameters $(G, H, t)$, vocabulary pools $\{Pool_j\}$
+\ENSURE Watermark signature $s$ and green list $G_i$
+\STATE Extract top-$k$ expert set from MoE model: $\text{TopK}(x) = \{i_1, i_2, \ldots, i_k\}$ \COMMENT{从MoE模型提取专家集合}
+\STATE Compute preliminary signature: $s' = \text{Enc}_{\text{comb}}(\text{TopK}(x))$ \COMMENT{计算初步签名}
+\STATE ECC encoding: $s = s' \cdot G$ \COMMENT{错误纠正码编码}
+\STATE Construct green list: $G_i = \bigcup_{j: s_j=1} Pool_j$ \COMMENT{构建绿色名单}
+\STATE Apply logit enhancement to tokens in $G_i$ \COMMENT{对绿色名单词元进行logit增强}
 \RETURN $s$, $G_i$
 \end{algorithmic}
 \end{algorithm}
@@ -149,19 +149,19 @@ s = H(v) \in \{0,1\}^L
 \end{equation}
 
 \begin{algorithm}[h]
-\caption{TGH水印嵌入算法}
+\caption{TGH Watermark Embedding Algorithm}
 \begin{algorithmic}[1]
-\REQUIRE 输入上下文$x$，轨迹特征提取器$\Phi$，哈希函数$H$，词汇池$\{Pool_j\}$
-\ENSURE 水印签名$s$和绿色名单$G_i$
-\STATE 初始化专家轨迹$T(x) = \emptyset$
-\FOR{每一MoE层$l = 1$到$L_{\text{moe}}$}
-    \STATE 提取第$l$层的top-$k$专家：$\text{TopK}_l(x)$
-    \STATE 添加到轨迹：$T(x) = T(x) \cup \{\text{TopK}_l(x)\}$
+\REQUIRE Input context $x$, trajectory feature extractor $\Phi$, hash function $H$, vocabulary pools $\{Pool_j\}$
+\ENSURE Watermark signature $s$ and green list $G_i$
+\STATE Initialize expert trajectory $T(x) = \emptyset$ \COMMENT{初始化专家轨迹}
+\FOR{each MoE layer $l = 1$ to $L_{\text{moe}}$}
+    \STATE Extract top-$k$ experts from layer $l$: $\text{TopK}_l(x)$ \COMMENT{提取第l层专家}
+    \STATE Add to trajectory: $T(x) = T(x) \cup \{\text{TopK}_l(x)\}$ \COMMENT{添加到轨迹}
 \ENDFOR
-\STATE 计算轨迹特征：$v = \Phi(T(x))$
-\STATE 生成签名：$s = H(v)$
-\STATE 构建绿色名单：$G_i = \bigcup_{j: s_j=1} Pool_j$
-\STATE 对$G_i$中的词元进行logit增强
+\STATE Compute trajectory features: $v = \Phi(T(x))$ \COMMENT{计算轨迹特征}
+\STATE Generate signature: $s = H(v)$ \COMMENT{生成签名}
+\STATE Construct green list: $G_i = \bigcup_{j: s_j=1} Pool_j$ \COMMENT{构建绿色名单}
+\STATE Apply logit enhancement to tokens in $G_i$ \COMMENT{对绿色名单词元进行logit增强}
 \RETURN $s$, $G_i$
 \end{algorithmic}
 \end{algorithm}
@@ -180,16 +180,16 @@ KLQ采用对比学习自动发现从路由权重到离散签名的语义不变�
 \textbf{零成本训练：}仅训练辅助量化器；主LLM保持冻结状态。
 
 \begin{algorithm}[h]
-\caption{KLQ水印嵌入算法}
+\caption{KLQ Watermark Embedding Algorithm}
 \begin{algorithmic}[1]
-\REQUIRE 输入上下文$x$，预训练量化器$Q_k$，码本大小$C$，词汇池$\{Pool_j\}$
-\ENSURE 水印签名$s$和绿色名单$G_i$
-\STATE 提取路由权重：$R(x)$
-\STATE 通过量化器前向传播：$p = Q_k(R(x))$
-\STATE 选择最高概率的码字：$c = \arg\max(p)$
-\STATE 转换为二进制签名：$s = \text{Binary}(c)$
-\STATE 构建绿色名单：$G_i = \bigcup_{j: s_j=1} Pool_j$
-\STATE 对$G_i$中的词元进行logit增强
+\REQUIRE Input context $x$, pre-trained quantizer $Q_k$, codebook size $C$, vocabulary pools $\{Pool_j\}$
+\ENSURE Watermark signature $s$ and green list $G_i$
+\STATE Extract routing weights: $R(x)$ \COMMENT{提取路由权重}
+\STATE Forward pass through quantizer: $p = Q_k(R(x))$ \COMMENT{通过量化器前向传播}
+\STATE Select highest probability codeword: $c = \arg\max(p)$ \COMMENT{选择最高概率码字}
+\STATE Convert to binary signature: $s = \text{Binary}(c)$ \COMMENT{转换为二进制签名}
+\STATE Construct green list: $G_i = \bigcup_{j: s_j=1} Pool_j$ \COMMENT{构建绿色名单}
+\STATE Apply logit enhancement to tokens in $G_i$ \COMMENT{对绿色名单词元进行logit增强}
 \RETURN $s$, $G_i$
 \end{algorithmic}
 \end{algorithm}
