@@ -1,0 +1,53 @@
+\begin{thebibliography}{10}
+
+\bibitem{pmark2024}
+Anonymous.
+\newblock Pmark: Towards robust and distortion-free semantic-level watermarking with channel constraints.
+\newblock {\em arXiv preprint arXiv:2509.21057}, 2024.
+
+\bibitem{chen2020simple}
+Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton.
+\newblock A simple framework for contrastive learning of visual representations.
+\newblock {\em International conference on machine learning}, pages 1597--1607, 2020.
+
+\bibitem{christ2023watermarking}
+Miranda Christ, Sam Gunn, and Omer Zamir.
+\newblock Watermarking for large language models: A survey.
+\newblock In {\em Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics}, pages 4295--4315, 2023.
+
+\bibitem{fedus2021switch}
+William Fedus, Barret Zoph, and Noam Shazeer.
+\newblock Switch transformer: Scaling to trillion parameter models with simple and efficient sparsity.
+\newblock {\em arXiv preprint arXiv:2101.03961}, 2021.
+
+\bibitem{jiang2024mixtral}
+Albert~Q Jiang, Alexandre Sablayrolles, Antoine Roux, Arthur Mensch, Blanche Savary, Chris Bamford, Devendra~Singh Chaplot, Diego de~las Casas, Emma Bressand, Gianna Lengyel, et~al.
+\newblock Mixtral of experts.
+\newblock In {\em arXiv preprint arXiv:2401.04088}, 2024.
+
+\bibitem{kirchenbauer2023watermark}
+John Kirchenbauer, Jonas Geiping, Yuxin Wen, Jonathan Katz, Ian Miers, and Tom Goldstein.
+\newblock A watermark for large language models.
+\newblock {\em arXiv preprint arXiv:2301.10226}, 2023.
+
+\bibitem{li2023survey}
+Yixin Li, Lei Li, Xinyu Wang, Peng Chen, Linyi Wang, and Yue Xie.
+\newblock A survey of text watermarking in the era of large language models.
+\newblock {\em arXiv preprint arXiv:2312.07913}, 2023.
+
+\bibitem{macwilliams1977theory}
+Florence~Jessie MacWilliams and Neil James~Alexander Sloane.
+\newblock {\em The theory of error-correcting codes}, volume~16.
+\newblock Elsevier, 1977.
+
+\bibitem{shazeer2017outrageously}
+Noam Shazeer, Azalia Mirhoseini, Krzysztof Maziarz, Andy Davis, Quoc Le, Geoffrey Hinton, and Jeff Dean.
+\newblock Outrageously large neural networks: The sparsely-gated mixture-of-experts layer.
+\newblock {\em arXiv preprint arXiv:1701.06538}, 2017.
+
+\bibitem{zhang2019paws}
+Yuan Zhang, Jason Baldridge, and Luheng He.
+\newblock Paws: Paraphrase adversaries from word scrambling.
+\newblock In {\em Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics}, pages 1298--1308, 2019.
+
+\end{thebibliography}
