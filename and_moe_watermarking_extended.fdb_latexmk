@@ -1,18 +1,18 @@
 # Fdb version 4
-["bibtex and_moe_watermarking_extended"] 0 "and_moe_watermarking_extended.aux" "and_moe_watermarking_extended.bbl" "and_moe_watermarking_extended" 1761015646 -1
+["bibtex and_moe_watermarking_extended"] 1761016702 "and_moe_watermarking_extended.aux" "and_moe_watermarking_extended.bbl" "and_moe_watermarking_extended" 1761016740 0
   "./and_moe_watermarking_extended.bib" 1761015639 3834 065654ffc2a70a107172dc56c895f0de ""
-  "and_moe_watermarking_extended.aux" 1761015645 7529 f75646d9b7d59e92f06ce8b311958ca2 "pdflatex"
+  "and_moe_watermarking_extended.aux" 1761016739 7921 07b8c9e22b77be7938824e284322c423 "pdflatex"
   "c:/texlive/2023/texmf-dist/bibtex/bst/base/plain.bst" 1747719841 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
   (generated)
   "and_moe_watermarking_extended.bbl"
   "and_moe_watermarking_extended.blg"
   (rewritten before read)
-["pdflatex"] 1761015642 "d:/Dev/cursor/github.com/moe-mark/and_moe_watermarking_extended.tex" "and_moe_watermarking_extended.pdf" "and_moe_watermarking_extended" 1761015646 2
-  "and_moe_watermarking_extended.aux" 1761015645 7529 f75646d9b7d59e92f06ce8b311958ca2 "pdflatex"
-  "and_moe_watermarking_extended.bbl" 0 -1 0 "bibtex and_moe_watermarking_extended"
+["pdflatex"] 1761016736 "d:/Dev/cursor/github.com/moe-mark/and_moe_watermarking_extended.tex" "and_moe_watermarking_extended.pdf" "and_moe_watermarking_extended" 1761016740 0
+  "and_moe_watermarking_extended.aux" 1761016739 7921 07b8c9e22b77be7938824e284322c423 "pdflatex"
+  "and_moe_watermarking_extended.bbl" 1761016703 2883 843c28c7dd302c9eb9d4f8bf7e4704a0 "bibtex and_moe_watermarking_extended"
   "and_moe_watermarking_extended.bib" 1761015639 3834 065654ffc2a70a107172dc56c895f0de ""
-  "and_moe_watermarking_extended.out" 1761015645 8369 5327f7d6dccb04ca919913f46c4defdf "pdflatex"
-  "and_moe_watermarking_extended.tex" 1761015641 46973 64d558cb51aab3f84b311f0e7cc8ad9b ""
+  "and_moe_watermarking_extended.out" 1761016739 8369 5327f7d6dccb04ca919913f46c4defdf "pdflatex"
+  "and_moe_watermarking_extended.tex" 1761016716 46863 59185b714309bce3874e7c35573ec25d ""
   "c:/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1747721550 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "c:/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1747720348 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1747722583 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -205,7 +205,7 @@
   "c:/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1747732654 4662804 27f73c2f767ae4579fe38abe9088e726 ""
   "c:/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1747732782 7883448 687bea0bb2d9c33c596e03abb64a6f47 ""
   "c:/texlive/2023/texmf.cnf" 1747732503 713 e69b156964470283e0530f5060668171 ""
-  "d:/Dev/cursor/github.com/moe-mark/and_moe_watermarking_extended.tex" 1761015641 46973 64d558cb51aab3f84b311f0e7cc8ad9b ""
+  "d:/Dev/cursor/github.com/moe-mark/and_moe_watermarking_extended.tex" 1761016716 46863 59185b714309bce3874e7c35573ec25d ""
   "usenix2019_v3.sty" 1759222675 3866 bca1cfa4b6d43c7c430f65f73ef1c9e6 ""
   (generated)
   "and_moe_watermarking_extended.aux"

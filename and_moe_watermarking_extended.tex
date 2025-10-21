@@ -374,15 +374,15 @@ Since watermark signals consist of numerous weak statistical biases, detection r
 
 For layer $l$, channel $j$, we compute the normalized distance between the selected token's proxy function score and the median:
 
-\begin{equation}
-z_{l,j} = \frac{\mathcal{F}_{\text{MoE}}(S_{\text{selected},l}; k_j) - \text{median}_l}{\sigma_l}
-\end{equation}
+\begin{align}
+z_{l,j} &= \frac{\mathcal{F}_{\text{MoE}}(S_{\text{selected},l}; k_j) - \text{median}_l}{\sigma_l}
+\end{align}
 
 The final detection statistic combines all $z_{l,j}$ values using weighted aggregation:
 
-\begin{equation}
-Z_{\text{final}} = \sum_{l=1}^L \sum_{j=1}^b w_{l,j} \cdot z_{l,j}
-\end{equation}
+\begin{align}
+Z_{\text{final}} &= \sum_{l=1}^L \sum_{j=1}^b w_{l,j} \cdot z_{l,j}
+\end{align}
 
 where weights $w_{l,j}$ reflect the expected signal strength and confidence of each channel.
 
@@ -400,7 +400,7 @@ To ensure transparency and reproducibility of experiments, we detail the hardwar
 
 \textbf{Hardware:} All experiments were conducted on a single NVIDIA A100 40GB GPU on a cloud platform. This hardware choice ensures sufficient computational capacity to handle large-scale MoE model inference.
 
-\textbf{Software:} Our implementation is based on Hugging Face's `transformers` library. The AND-MoE watermarking logic is implemented as a custom `LogitsProcessor`. This is a standard pattern in the `transformers` generation pipeline for modifying model behavior. To obtain the internal routing decisions required by the proxy function, we set `output_router_logits=True` in the model's forward pass call, enabling the model to return routing scores for each layer.
+\textbf{Software:} Our implementation is based on Hugging Face's `transformers` library. The AND-MoE watermarking logic is implemented as a custom `LogitsProcessor`. This is a standard pattern in the `transformers` generation pipeline for modifying model behavior. To obtain the internal routing decisions required by the proxy function, we set `output\_router\_logits=True` in the model's forward pass call, enabling the model to return routing scores for each layer.
 
 \textbf{Reproducibility:} We will create a public GitHub repository containing all experimental scripts, environment configuration files (`requirements.txt`), and exact random seeds used for all experiments to ensure complete reproducibility of research results.
 
@@ -428,7 +428,7 @@ We conducted comprehensive quantitative comparisons of AND-MoE, baseline methods
 
 Table~\ref{tab:performance} summarizes the core performance metrics on the Mixtral-8x7B (4-bit quantized) model.
 
-\begin{table}[h]
+\begin{table*}[t]
 \centering
 \small
 \begin{tabular}{|l|c|c|c|}
@@ -442,7 +442,7 @@ Kirchenbauer et al. & 6.15 ± 0.05 & 0.99 ± 0.01 & 29.1 ± 0.3 \\
 \end{tabular}
 \caption{Watermarking performance and overhead comparison on Mixtral-8x7B (4-bit). Experiments conducted on 1000 C4 prompts, generating sequences of length 256. Results are mean ± standard deviation of 5 different seed runs.}
 \label{tab:performance}
-\end{table}
+\end{table*}
 
 The results show that AND-MoE achieves perfect detectability (AUC=1.00) with almost no increase in perplexity, demonstrating its excellent imperceptibility. Compared to Kirchenbauer et al.'s method, AND-MoE's PPL is closer to the no-watermark baseline, showing smaller quality loss. Although AND-MoE introduces slight latency overhead (approximately 9.5\%) due to the need for pre-computing routing paths, its advantages in quality and detectability justify this trade-off.
 
@@ -477,7 +477,7 @@ For each original-paraphrase sentence pair, we first use the original sentence a
 
 Table~\ref{tab:routing_similarity} shows the quantified impact of different paraphrase strategies on MoE routing path stability.
 
-\begin{table}[h]
+\begin{table*}[t]
 \centering
 \small
 \begin{tabular}{|l|c|c|}
@@ -494,7 +494,7 @@ GPT-4 Rewriting & 76.9 ± 4.2 & 80.3 ± 3.8 \\
 \end{tabular}
 \caption{Routing similarity under different paraphrase attacks. Higher similarity indicates greater preservation of routing paths after attacks. Results are mean ± standard deviation of 1000 samples.}
 \label{tab:routing_similarity}
-\end{table}
+\end{table*}
 
 These results provide solid empirical support for the theoretical model in Theorem 2. The data shows that even powerful semantic attacks like GPT-4 rewriting maintain routing stability rates $p_s$ (approximated by Jaccard similarity) above 75\%. This indicates that MoE models' internal computation paths (i.e., routing decisions) are indeed more semantically stable than their generated surface text. Simple lexical substitutions (synonym substitution) and structural adjustments (sentence reordering) have minimal impact on routing paths, with similarities exceeding 94\%. These data not only confirm AND-MoE's robustness foundation but also constitute novel quantitative analysis of MoE routing semantic stability, revealing the intrinsic behavior of these architectures when facing input perturbations.
 
@@ -514,9 +514,10 @@ Traditional paraphrase attacks fail because they target generated text rather th
 
 We address the threat of routing drift through fine-tuning by introducing \textit{routing regularization}. The loss function includes a penalty term:
 
-\begin{equation}
-\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{task}} + \lambda \cdot \sum_{l=1}^{L} D_{KL}(P_{\text{original}}(S_l|\text{canary}) || P_{\text{finetuned}}(S_l|\text{canary}))
-\end{equation}
+\begin{align}
+\mathcal{L}_{\text{total}} &= \mathcal{L}_{\text{task}} + \lambda \cdot \sum_{l=1}^{L} D_{KL}(P_{\text{original}}(S_l|\text{canary}) \\
+&\quad || P_{\text{finetuned}}(S_l|\text{canary}))
+\end{align}
 
 This ensures that fine-tuned models preserve original routing patterns for watermark-related inputs.
 
@@ -593,10 +594,7 @@ Code and datasets will be made publicly available upon publication to facilitate
 \item We can apply a variant of Hoeffding's inequality to bound this deviation. Let $Z_i = p_i(X_i - \mathbb{E}[X_i])$, then $Z_i$ are zero-mean random variables. The deviation probability of their sum can be bounded. More directly, we can treat $P_O(C_{\text{green}})$ as biased sampling from a distribution with total mass $P_{\text{cand}}$.
 
 \item According to Hoeffding's inequality, for $n$ independent random variables $Y_1,..., Y_n$ in the range $[a,b]$, the probability that their mean $\bar{Y}$ deviates from its expectation $\mathbb{E}$ is:
-
-\begin{equation}
-P(|\bar{Y} - \mathbb{E}| \ge \Delta) \le 2e^{-2n\Delta^2}
-\end{equation}
+$$P(|\bar{Y} - \mathbb{E}| \ge \Delta) \le 2e^{-2n\Delta^2}$$
 
 \item In our scenario, the deviation $\Delta = |P_O(C_{\text{green}}) - P_{\text{cand}}/2|$. We can relate this deviation to the total variation distance. The watermarking process redistributes probability mass from $C_{\text{red}}$ to $C_{\text{green}}$. The total variation distance is $d_{TV}(P_W, P_O) = P_O(C_{\text{red}}) = P_{\text{cand}} - P_O(C_{\text{green}})$. Therefore, the deviation of $d_{TV}$ is $|P_O(C_{\text{red}}) - P_{\text{cand}}/2| = |P_{\text{cand}}/2 - P_O(C_{\text{green}})| = \Delta$.
 
@@ -620,21 +618,16 @@ P(|\bar{Y} - \mathbb{E}| \ge \Delta) \le 2e^{-2n\Delta^2}
 
 \item Therefore, we can calculate the expectation of $z'_i$:
 
-\begin{align}
-\mathbb{E}[z'_i] &= P(\text{route same}) \cdot \mathbb{E}[z'_i | \text{route same}] + P(\text{route changed}) \cdot \mathbb{E}[z'_i | \text{route changed}] \\
-&= p_s \cdot \mathbb{E}[z_i] + (1-p_s) \cdot 0 = p_s \cdot \mu_z
-\end{align}
+$$\mathbb{E}[z'_i] = P(\text{route same}) \cdot \mathbb{E}[z'_i | \text{route same}] + P(\text{route changed}) \cdot \mathbb{E}[z'_i | \text{route changed}]$$
+$$= p_s \cdot \mathbb{E}[z_i] + (1-p_s) \cdot 0 = p_s \cdot \mu_z$$
 
 \item For the entire sequence $T'$'s detection statistic $Z'_{\text{final}} = \sum_{i=1}^M z'_i$, its expected value is:
 
-\begin{equation}
-\mathbb{E}[Z'_{\text{final}}] = \sum_{i=1}^M \mathbb{E}[z'_i] = \sum_{i=1}^M p_s \cdot \mu_z = M \cdot p_s \cdot \mu_z
-\end{equation}
+$$\mathbb{E}[Z'_{\text{final}}] = \sum_{i=1}^M \mathbb{E}[z'_i] = \sum_{i=1}^M p_s \cdot \mu_z$$
+$$= M \cdot p_s \cdot \mu_z$$
 
 \item Since $\mathbb{E}[Z_{\text{final}}] = M \mu_z$, we can conclude:
-\begin{equation}
-\mathbb{E}[Z'_{\text{final}}] = p_s \cdot \mathbb{E}[Z_{\text{final}}]
-\end{equation}
+$$\mathbb{E}[Z'_{\text{final}}] = p_s \cdot \mathbb{E}[Z_{\text{final}}]$$
 
 \item The detection probability is the probability that $Z'_{\text{final}}$ exceeds some threshold $\tau$, i.e., $P(Z'_{\text{final}} > \tau)$. Since $Z'_{\text{final}}$ is the sum of multiple random variables, its distribution approximates a normal distribution with mean $p_s M \mu_z$. Clearly, the larger the mean, the greater the probability of exceeding a fixed threshold $\tau$. Therefore, the detection probability is a monotonically increasing function of $p_s$ and $M$. QED.
 \end{enumerate}
