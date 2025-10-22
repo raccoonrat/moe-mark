@@ -1058,6 +1058,11 @@ INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/zptmcmr.vf
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmr8t.vf
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm
+INPUT ./figs/AND-MoE-Arch.png
+INPUT ./figs/AND-MoE-Arch.png
+INPUT figs/AND-MoE-Arch.png
+INPUT ./figs/AND-MoE-Arch.png
+INPUT ./figs/AND-MoE-Arch.png
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8t.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/times/zpzccmry.vf
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
