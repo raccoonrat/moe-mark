@@ -271,6 +271,17 @@ This formalization transforms the abstract concept of "robustness" into a measur
 \section{AND-MoE Framework Design}
 %-------------------------------------------------------------------------------
 
+\subsection{Architecture Overview}
+
+Figure~\ref{fig:architecture} provides a high-level overview of the AND-MoE framework, illustrating how watermark signals are embedded within the MoE architecture's internal computation process rather than in the generated text.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{figs/AND-MoE-Arch.png}
+\caption{AND-MoE Framework Architecture. The framework leverages the discrete, combinatorial nature of expert routing decisions as watermark carriers, embedding signals within the model's internal computation process rather than in generated text. The architecture shows the integration of three key techniques: (1) Proxy Function Internalization, (2) Dynamic Routing Candidate Sets, and (3) Multi-Channel Constraint Stacking.}
+\label{fig:architecture}
+\end{figure*}
+
 \subsection{Core Innovation: Proxy Function Internalization}
 
 The fundamental breakthrough of AND-MoE is moving watermark constraints from \textit{post-hoc evaluation of generated content} to \textit{real-time intervention in the generation process}. Instead of waiting for complete sentences to evaluate their semantic embeddings, we leverage the model's internal computation state as the watermark carrier.
